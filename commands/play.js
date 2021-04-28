@@ -39,7 +39,7 @@ module.exports = {
 
                 const video = await video_finder(args.join(' '));
                 if (video){
-                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail}
+                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
                 } else {
                      message.channel.send('Error finding video.');
                 }
