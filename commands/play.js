@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+require('ffmpeg-static')
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
 
@@ -93,7 +94,7 @@ const video_player = async (guild, song) => {
         queue.delete(guild.id);
         return;
     }
-    if(song.is_live){
+    async if(song.is_live){
         const connection = await voice_channel.join();
         // Disabling chunking is recommended in Discord bots
         const stream = ytdl(args[0], {filter:'audioonly', quality:'95'});
