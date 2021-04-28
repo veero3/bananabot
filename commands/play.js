@@ -8,7 +8,7 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's'],
+    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume'],
     async execute(client, message, args, cmd, Discord){
 
 
@@ -77,6 +77,8 @@ module.exports = {
 
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
+        else if(cmd === `pause`)pause(message, server_queue);
+        else if(cmd === 'resume')resume(message, server_queue);
         else if (cmd ==='queue' || cmd ==='q') que(message, server_queue);
     }
     
@@ -124,11 +126,28 @@ const video_player = async (guild, song) => {
     await song_queue.text_channel.send(embedd);
     
 }
+const pause = (message, server_queue)=>{
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
+    if (!message.guild.voice.channel) return message.channel.send('i\'m not playing anything');
+
+    server_queue.connection.dispatcher.pause();
+    message.channel.send('Paused').then(message.react('✋'))
+}
+const resume = (message, server_queue)=>{
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
+    if (!message.guild.voice.channel) return message.channel.send('i\'m not playing anything');
+
+    server_queue.connection.dispatcher.resume();
+    message.channel.send('Resuming').then(message.react ('🎧'))
+}
 
 const skip_song = (message, server_queue) => {
     if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
     if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
-    if(!server_queue){
+    if (!message.guild.voice.channel) return message.channel.send('i\'m not playing anything');
+    if (!server_queue){
         return message.channel.send(`There are no songs in queue 😔`);
     }
     server_queue.connection.dispatcher.end();
