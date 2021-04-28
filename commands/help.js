@@ -14,7 +14,7 @@ module.exports ={
             {name:`**Moderation**`, value:`\`mute, unmute, kick, ban, unban\``},
             {name: `**Role Ulitiies**`, value:`\`role, roleadd, rolerem\``},
             {name: `**Music**`, value:`\`play, stop, skip, queue, leave, pause, resume\``},
-            {name: `**Info**`, value:`userinfo, serverinfo`}
+            {name: `**Info**`, value:`\`userinfo, serverinfo\``}
         )
     //  .setThumbnail(message.guild.icon.link)
     //  .setImage('https://i.imgur.com/wSTFkRM.png')
