@@ -1,5 +1,5 @@
 const ytdl = require('ytdl-core');
-require('ffmpeg-static');
+//require('ffmpeg-static');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
 
