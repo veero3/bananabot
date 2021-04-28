@@ -94,9 +94,9 @@ const video_player = async (guild, song) => {
         queue.delete(guild.id);
         return;
     }
-    async if(song.is_live){
+    if(song.is_live){
         const connection = await voice_channel.join();
-        // Disabling chunking is recommended in Discord bots
+        Disabling chunking is recommended in Discord bots
         const stream = ytdl(args[0], {filter:'audioonly', quality:'95'});
         const dispatcher = connection.play(stream);
          dispatcher.on('speaking', speaking => {
