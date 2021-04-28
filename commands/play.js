@@ -8,7 +8,7 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume', 'seek'],
+    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume'],
     async execute(client, message, args, cmd, Discord){
 
 
@@ -79,8 +79,7 @@ module.exports = {
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
         else if(cmd === `pause`)pause(message, server_queue);
         else if(cmd === 'resume')resume(message, server_queue);
-        else if(cmd === 'seek') seek(message, server_queue);
-        else if (cmd ==='queue' || cmd ==='q') que(message, args, server_queue);
+        else if (cmd ==='queue' || cmd ==='q') que(message, server_queue);
     }
     
 }
@@ -135,18 +134,6 @@ const pause = (message, server_queue)=>{
     server_queue.connection.dispatcher.pause();
     message.channel.send('Paused').then(message.react('✋'))
 }
-const seek = (message, args, server_queue)=>{
-    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
-    if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
-    if (!message.guild.voice.channel) return message.channel.send('i\'m not playing anything');
-    if(!args[0]) return message.channel.send('you did not provide a valid arguement')
-         song_queue.connection.play(song, { seek: args[0], volume: 0.5 })
-         .on('finish', () => {
-             song_queue.songs.shift();
-             video_player(guild, song_queue.songs[0]);
-         });
-}
-
 const resume = (message, server_queue)=>{
     if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
     if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
