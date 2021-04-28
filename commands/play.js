@@ -134,6 +134,18 @@ const pause = (message, server_queue)=>{
     server_queue.connection.dispatcher.pause();
     message.channel.send('Paused').then(message.react('✋'))
 }
+const seek = (message, server_queue)=>{
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
+    if (!message.guild.voice.channel) return message.channel.send('i\'m not playing anything');
+    const stream = ytdl(song.url, { filter: 'audioonly'});
+         song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
+         .on('finish', () => {
+             song_queue.songs.shift();
+             video_player(guild, song_queue.songs[0]);
+         });
+}
+
 const resume = (message, server_queue)=>{
     if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
     if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
