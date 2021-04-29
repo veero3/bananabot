@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+//require('ffmpeg-static');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
 
@@ -39,7 +40,7 @@ module.exports = {
 
                 const video = await video_finder(args.join(' '));
                 if (video){
-                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail}
+                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
                 } else {
                      message.channel.send('Error finding video.');
                 }
@@ -95,7 +96,7 @@ const video_player = async (guild, song) => {
     }
     if(song.is_live){
         const connection = await voice_channel.join();
-        // Disabling chunking is recommended in Discord bots
+        //Disabling chunking is recommended in Discord bots
         const stream = ytdl(args[0], {filter:'audioonly', quality:'95'});
         const dispatcher = connection.play(stream);
          dispatcher.on('speaking', speaking => {
