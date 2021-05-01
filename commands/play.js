@@ -1,5 +1,4 @@
 const ytdl = require('ytdl-core');
-//require('ffmpeg-static');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
 
@@ -72,7 +71,20 @@ module.exports = {
                 }
             } else{
                 server_queue.songs.push(song);
-                return message.channel.send(`:thumbsup: **${song.title}** added to queue!`);
+                let emb = new Discord.MessageEmbed()
+                .setColor('RANDOM')
+                .setAuthor('Added To Queue!!')
+                .setTitle(song.title)
+                .addFields(
+                    {name:`Channel`, value: `${voice_channel.name}`},
+                    {name:`Length`, value: `${song.time}`}
+                    )
+                .setThumbnail(song.thumb)
+                .setColor('RANDOM') 
+                .setTimestamp()
+                .setFooter(message.guild.name);   
+
+                return message.channel.send(emb).then(message.react('👌'));
             }
         }
 
@@ -96,8 +108,8 @@ const video_player = async (guild, song) => {
     }
     if(song.is_live){
         const connection = await voice_channel.join();
-        //Disabling chunking is recommended in Discord bots
-        const stream = ytdl(args[0], {filter:'audioonly', quality:'95'});
+        // Disabling chunking is recommended in Discord bots
+        const stream = ytdl(args[0], { quality:'20'});
         const dispatcher = connection.play(stream);
          dispatcher.on('speaking', speaking => {
         if (!speaking) voice_channel.leave();
@@ -116,7 +128,7 @@ const video_player = async (guild, song) => {
         .setTitle(song.title)
         .setURL(song.url)
         .addFields(
-            {name:`Channel`, value: `${song_queue.voice_channel}`},
+            {name:`Channel`, value: `${song_queue.voice_channel.name}`},
             {name:`Length`, value: `${song.time}`}
             )
         .setThumbnail(song.thumb)
@@ -163,14 +175,19 @@ const stop_song = (message, server_queue) => {
     message.channel.send('Bye Bye :wave:')
 }
 const que = (message, server_queue) => { 
-    if(server_queue){       
+    if(server_queue){ 
+        let i = 1;
         const emb = new Discord.MessageEmbed()
             .setColor('RANDOM')
             .setTitle('**Queue**')
             .setTimestamp()
             .setFooter(message.guild.name); 
-        for(song of server_queue.songs){                          
+        for(song of server_queue.songs){ 
+            if(i == 1);
+            else{                         
             emb.addField(song.title, song.time)
+            }
+            i++;
         } 
         message.channel.send(emb); 
     }
