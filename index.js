@@ -16,6 +16,6 @@ client.discordTogether = new DiscordTogether(client);
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login('ODM1NDEyNjkwNDI4MTAwNjQ4.YIPEsg.eDrFKLbLeic7ONk4hecxGWvOIyo');
+client.login('process.env.token');
 
 
