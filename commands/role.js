@@ -10,6 +10,8 @@ module.exports={
         else if(!targ){
             targ=message.guild.members.cache.find(member => member.id === args[1]);
         }
+        if( message.member.hasPermission("MANAGE_ROLES") && message.guild.me.hasPermission("MANAGE_ROLES")){
+       
         if(!message.guild.roles.cache.find(role => role.name === args[0])){
            return message.channel.send('you didnt provide a proper role').then(message.react('❌'));
         }
@@ -24,7 +26,9 @@ module.exports={
             return message.channel.send('You did not define a role to add or remove from a user').then(message.react('❌'));
         }
        
-        
+        if(message.member.roles.highest.position<=message.guild.roles.cache.find(role => role.name===args[0]).position){
+            return message.channel.send('cant do that kiddo!');
+        }
         if(cmd ==='roleadd'){
             if(targ.roles.cache.has(rolework.id)){
                 message.channel.send(`${targ} already has this role`);
@@ -56,4 +60,13 @@ module.exports={
             }
         }
     }
+    else if(!message.guild.me.hasPermission("MANAGE_ROLES")){
+    message.channel.send('I wish I could do that!').then(message.react('❌'));
+
+    }
+
+else{
+    message.channel.send('nah I would rather not!').then(message.react('❌'));
+}
+}
 }
