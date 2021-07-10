@@ -3,6 +3,8 @@ require('dotenv').config();
 
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION" ]});
 
+const disbut = require('discord.js-buttons')(client);
+
 client.commands = new Discord.Collection();
 
 client.events = new Discord.Collection();
