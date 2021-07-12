@@ -110,10 +110,10 @@ const video_player = async (guild, song) => {
         const connection = await voice_channel.join();
         // Disabling chunking is recommended in Discord bots
         const stream = ytdl(args[0], { quality:'20'});
-        const dispatcher = connection.play(stream);
-         while(speaking){dispatcher.on('speaking', speaking => {
+        const dispatcher = await connection.play(stream);
+        dispatcher.on('speaking', speaking => {
         if (!speaking) voice_channel.leave();
-  })}
+  });
     }
      else{
      const stream = ytdl(song.url, { filter: 'audioonly'});
