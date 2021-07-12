@@ -107,7 +107,6 @@ const video_player = async (guild, song) => {
         return;
     }
     if(song.is_live){
-        message.channel.send('yes');
         const connection = await voice_channel.join();
         // Disabling chunking is recommended in Discord bots
         let stream = ytdl.downloadFromInfo(info, {filter: 'audioonly'})
