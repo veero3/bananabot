@@ -44,9 +44,7 @@ module.exports = {
                      message.channel.send('Error finding video.');
                 }
             }
-            if(!message.guild.voice){
-                server_queue.songs = [];
-            }
+           
 
             //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue){
@@ -102,6 +100,7 @@ module.exports = {
 
 const video_player = async (guild, song) => {
     const song_queue = queue.get(guild.id);
+   
 
     //If no song is left in the server queue. Leave the voice channel and delete the key and value pair from the global queue.
     if (!song) {
@@ -141,6 +140,10 @@ const video_player = async (guild, song) => {
         .setFooter(guild.name);   
    
     await song_queue.text_channel.send(embedd);
+    if(!message.guild.voice.channel){
+        server_queue.songs = [];
+        console.log('queue emptied');
+    }
     
 }
 const pause = (message, server_queue)=>{
