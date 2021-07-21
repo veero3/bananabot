@@ -44,6 +44,9 @@ module.exports = {
                      message.channel.send('Error finding video.');
                 }
             }
+            if(!guild.voice.channel){
+                server_queue.songs = [];
+            }
 
             //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue){
@@ -106,23 +109,24 @@ const video_player = async (guild, song) => {
         queue.delete(guild.id);
         return;
     }
-    if(song.is_live){
-        const connection = await voice_channel.join();
-        // Disabling chunking is recommended in Discord bots
-        const stream = ytdl(args[0], { quality:'20'});
-        const dispatcher = connection.play(stream);
-         dispatcher.on('speaking', speaking => {
-        if (!speaking) voice_channel.leave();
-  });
-    }
-     else{
+//     if(song.is_live){
+//         const connection = await voice_channel.join();
+//         // Disabling chunking is recommended in Discord bots
+//         const stream = ytdl(args[0], { quality:'20'});
+//         const dispatcher = connection.play(stream);
+//          dispatcher.on('speaking', speaking => {
+//         if (!speaking) voice_channel.leave();
+//   });
+//     }
+//      else{
+    
      const stream = ytdl(song.url, { filter: 'audioonly'});
          song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
          .on('finish', () => {
              song_queue.songs.shift();
              video_player(guild, song_queue.songs[0]);
          });
-     }
+     
         const embedd = new Discord.MessageEmbed()
         .setAuthor(`🎶 Now playing`)
         .setTitle(song.title)
