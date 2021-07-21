@@ -44,7 +44,7 @@ module.exports = {
                      message.channel.send('Error finding video.');
                 }
             }
-            if(!guild.voice.channel){
+            if(!message.guild.voice.channel){
                 server_queue.songs = [];
             }
 
