@@ -8,7 +8,7 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume'],
+    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume', 'seek'],
     async execute(client, message, args, cmd, Discord){
 
 
@@ -41,7 +41,7 @@ module.exports = {
                 if (video){
                     song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
                 } else {
-                     message.channel.send('Error finding video.');
+                    return message.channel.send('Error finding video.');
                 }
             }
            
@@ -88,12 +88,24 @@ module.exports = {
                 return message.channel.send(emb).then(message.react('👌'));
             }
         }
-
+        
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
         else if(cmd === `pause`)pause(message, server_queue);
         else if(cmd === 'resume')resume(message, server_queue);
-        else if (cmd ==='queue' || cmd ==='q') que(message, server_queue);
+        else if(cmd ==='queue' || cmd ==='q') que(message, server_queue);
+        else if(cmd ==='seek'){
+                const queue_constructor = {
+                    voice_channel: voice_channel,
+                    text_channel: message.channel,
+                    connection: null,
+                    songs:[server_queue.songs[0]]
+                }
+            
+            const connection = await voice_channel.join();
+            queue_constructor.connection = connection;
+            seek(message.guild, queue_constructor.songs[0], args, message, server_queue)};
+        ;
     }
     
 }
@@ -177,8 +189,13 @@ const stop_song = (message, server_queue) => {
     server_queue.connection.dispatcher.end();
     message.channel.send('Bye Bye :wave:')
 }
-const que = (message, server_queue) => { 
+const que = (message, server_queue, song) => { 
     if(server_queue){ 
+        const embe = new Discord.MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle('Now Playing!')
+        .addField(server_queue.songs[0].title, server_queue.songs[0].time)
+        message.channel.send(embe);
         let i = 1;
         const emb = new Discord.MessageEmbed()
             .setColor('RANDOM')
@@ -197,4 +214,33 @@ const que = (message, server_queue) => {
     else{
         message.channel.send('No Songs in queue')
     }        
+}
+
+
+
+const seek = async (guild, song, args, message, server_queue) => {
+        if(!args || args>= server_queue.songs[0].time){return message.channel.send('please enter a valid time amount')}
+        const song_queue = queue.get(guild.id)
+        
+    const stream = ytdl(song.url, { filter: 'audioonly'});
+        song_queue.connection.play(stream, { seek: args, volume: 0.5 })
+        .on('finish', () => {
+            song_queue.songs.shift();
+            video_player(guild, song_queue.songs[0]);
+        });
+        
+        const embeddd = new Discord.MessageEmbed()
+        .setAuthor(`🎶 Now playing`)
+        .setTitle(song.title)
+        .setURL(song.url)
+        .addFields(
+            {name:`Channel`, value: `${song_queue.voice_channel.name}`},
+            {name:`Length`, value: `${song.time}`}
+            )
+        .setThumbnail(song.thumb)
+        .setColor('RANDOM') 
+        .setTimestamp()
+        .setFooter(guild.name);   
+
+    await song_queue.text_channel.send(embeddd);
 }
