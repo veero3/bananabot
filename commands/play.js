@@ -29,7 +29,7 @@ module.exports = {
             //If the first argument is a link. Set the song object to have two keys. Title and URl.
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive}
+                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, thumb: song_info.videoDetails.thumbnail, time: song_info.videoDetails.time}
             } else {
                 //If there was no link, use keywords to search for a video. Set the song object to have two keys. Title and URl.
                 const video_finder = async (query) =>{
