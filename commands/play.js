@@ -219,7 +219,7 @@ const que = (message, server_queue, song) => {
 
 
 const seek = async (guild, song, args, message, server_queue) => {
-        if(!args || args>= server_queue.songs[0].time){return message.channel.send('please enter a valid time amount')}
+        if(!args || args>= server_queue.songs[0].time || args<0){return message.channel.send('please enter a valid time amount')}
         const song_queue = queue.get(guild.id)
         
     const stream = ytdl(song.url, { filter: 'audioonly'});
