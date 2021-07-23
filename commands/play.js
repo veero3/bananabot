@@ -29,7 +29,7 @@ module.exports = {
             //If the first argument is a link. Set the song object to have two keys. Title and URl.
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, thumb: song_info.videoDetails.thumbnail, time: song_info.videoDetails.time}
+                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive}
             } else {
                 //If there was no link, use keywords to search for a video. Set the song object to have two keys. Title and URl.
                 const video_finder = async (query) =>{
@@ -121,30 +121,21 @@ const video_player = async (guild, song, message) => {
         return;
     }
 
-    if(song.is_live){
-        const connection = await voice_channel.join();
-        // Disabling chunking is recommended in Discord bots
-        let stream = ytdl.downloadFromInfo(info, {filter: 'audioonly'})
-        const dispatcher = await connection.playStream(stream);
-        dispatcher.on('speaking', speaking => {
-        if (!speaking) voice_channel.leave();
-  });
-    }
-     else{
-     const stream = ytdl(song.url, { filter: 'audioonly'});
+      
+     const stream = ytdl(song.url, {liveBuffer: 500});
          song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
          .on('finish', () => {
              song_queue.songs.shift();
              video_player(guild, song_queue.songs[0]);
          });
-        }
+        
         const embedd = new Discord.MessageEmbed()
         .setAuthor(`🎶 Now playing`)
         .setTitle(song.title)
         .setURL(song.url)
         .addFields(
-            {name:`Channel`, value: `${song_queue.voice_channel.name}`},
-            {name:`Length`, value: `${song.time}`}
+            {name:`Channel`, value: `<#${guild.voice.channelID}>`},
+            {name:`Length`, value: (song.time)?`${song.time.timestamp}`:`live`}
             )
         .setThumbnail(song.thumb)
         .setColor('RANDOM') 
@@ -187,7 +178,12 @@ const stop_song = (message, server_queue) => {
     if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
     server_queue.songs = [];
     server_queue.connection.dispatcher.end();
-    message.channel.send('Bye Bye :wave:')
+    const stopembed = new Discord.MessageEmbed()
+    .setTitle(`Stopped Music!`)
+    .setDescription(`Left <#${message.guild.voice.channelID}>`)
+    .setFooter(message.guild)
+    .setTimestamp()
+    message.channel.send('Bye Bye :wave:', stopembed)
 }
 const que = (message, server_queue, song) => { 
     if(server_queue){ 
@@ -219,7 +215,8 @@ const que = (message, server_queue, song) => {
 
 
 const seek = async (guild, song, args, message, server_queue) => {
-        if(!args || args>= server_queue.songs[0].time || args<0){return message.channel.send('please enter a valid time amount')}
+    const seekamt = +args[0]
+        if(!seekamt || seekamt>= server_queue.songs[0].time.seconds || seekamt<0){return message.channel.send('please enter a valid time amount')}
         const song_queue = queue.get(guild.id)
         
     const stream = ytdl(song.url, { filter: 'audioonly'});
@@ -228,19 +225,5 @@ const seek = async (guild, song, args, message, server_queue) => {
             song_queue.songs.shift();
             video_player(guild, song_queue.songs[0]);
         });
-        
-        const embeddd = new Discord.MessageEmbed()
-        .setAuthor(`🎶 Now playing`)
-        .setTitle(song.title)
-        .setURL(song.url)
-        .addFields(
-            {name:`Channel`, value: `${song_queue.voice_channel.name}`},
-            {name:`Length`, value: `${song.time}`}
-            )
-        .setThumbnail(song.thumb)
-        .setColor('RANDOM') 
-        .setTimestamp()
-        .setFooter(guild.name);   
-
-    await song_queue.text_channel.send(embeddd);
+        message.channel.send(`seeking to ${seekamt}`).then(message.react('⏩'))
 }
