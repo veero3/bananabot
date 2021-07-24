@@ -1,7 +1,7 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
-
+var songtime=0;
 
 //Global queue for your bot. Every server will have a key and value pair in this map. { guild.id, queue_constructor{} }
 const queue = new Map();
@@ -25,12 +25,14 @@ module.exports = {
         if (cmd === 'play' || cmd === 'p'){
             if (!args.length) return message.channel.send('You need to send the second argument!');
             let song = {};
-
+            
             //If the first argument is a link. Set the song object to have two keys. Title and URl.
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive}
-            } else {
+                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
+                songtime = song.time+` Seconds`;
+            } 
+            else {
                 //If there was no link, use keywords to search for a video. Set the song object to have two keys. Title and URl.
                 const video_finder = async (query) =>{
                     const video_result = await ytSearch(query);
@@ -40,6 +42,7 @@ module.exports = {
                 const video = await video_finder(args.join(' '));
                 if (video){
                     song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
+                    songtime=song.time; 
                 } else {
                     return message.channel.send('Error finding video.');
                 }
@@ -65,6 +68,7 @@ module.exports = {
                     const connection = await voice_channel.join();
                     queue_constructor.connection = connection;
                     video_player(message.guild, queue_constructor.songs[0]);
+                    connection.voice.setSelfDeaf(true);
                 } catch (err) {
                     queue.delete(message.guild.id);
                     message.channel.send('There was an error connecting!');
@@ -78,7 +82,7 @@ module.exports = {
                 .setTitle(song.title)
                 .addFields(
                     {name:`Channel`, value: `${voice_channel.name}`},
-                    {name:`Length`, value: `${song.time}`}
+                    {name:`Length`, value: `${songtime}`}
                     )
                 .setThumbnail(song.thumb)
                 .setColor('RANDOM') 
@@ -135,7 +139,7 @@ const video_player = async (guild, song, message) => {
         .setURL(song.url)
         .addFields(
             {name:`Channel`, value: `<#${guild.voice.channelID}>`},
-            {name:`Length`, value: (song.time)?`${song.time.timestamp}`:`live`}
+            {name:`Length`, value: (song.time)?`${songtime}`:`live`}
             )
         .setThumbnail(song.thumb)
         .setColor('RANDOM') 
@@ -178,6 +182,7 @@ const stop_song = (message, server_queue) => {
     if (message.member.voice.channel != message.guild.voice.channel) return message.channel.send('The bot is playing in a different channel');
     server_queue.songs = [];
     server_queue.connection.dispatcher.end();
+    message.guild.me.voice.channel.leave();
     const stopembed = new Discord.MessageEmbed()
     .setTitle(`Stopped Music!`)
     .setDescription(`Left <#${message.guild.voice.channelID}>`)
