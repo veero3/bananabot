@@ -139,7 +139,7 @@ const video_player = async (guild, song, message) => {
         .setURL(song.url)
         .addFields(
             {name:`Channel`, value: `<#${guild.voice.channelID}>`},
-            {name:`Length`, value: (song.time)?`${songtime}`:`live`}
+            {name:`Length`, value: (song.time&&song.time!=0)?`${songtime}`:`live`}
             )
         .setThumbnail(song.thumb)
         .setColor('RANDOM') 
