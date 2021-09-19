@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 profileschema = new mongoose.Schema({
-    UserID: {type: string, require: true, unique: true},
-    ServerID: {type: string, require: true, unique: false},
-    quantity: {type: number, default: 0},
-    songname: {type: string}
+    UserID: {type: String, require: true, unique: true},
+    username: {type: String, require: true},
+    quantity: {type: Number, default: 0},
+    songname: {type: String}
+    //songurl: {type: String, unique: true}
 })
 const model = mongoose.model('playlist', profileschema)
 
