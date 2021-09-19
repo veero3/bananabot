@@ -1,8 +1,8 @@
 const profilemodel = require('../../models/profieschema');
-module.exports = async(client, discord, member) =>{
+module.exports = async(client, discord, message) =>{
     let profile = new profilemodel({
-        UserID = member.id,
-        ServerID = member.guild.id,
+        UserID = message.member.id,
+        ServerID = message.guild.id,
         quantity = 0
         
     })
