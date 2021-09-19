@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION" ]});
 
@@ -18,6 +19,15 @@ client.discordTogether = new DiscordTogether(client);
     require(`./handlers/${handler}`)(client, Discord);
 })
 
+mongoose.connect(process.env.mongo_srv, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    }).then(()=>{
+        console.log('connected to the data base')
+    }).catch((err)=>{
+        console.log(err)
+    });
 client.login(process.env.token);
 
 
