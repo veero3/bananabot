@@ -8,7 +8,7 @@ module.exports = async(Discord, client, message) =>{
     const command = client.commands.get(cmd)||client.commands.find(a => a.aliases && a.aliases.includes(cmd));
     let profileData;
  
-   try {profileData = await profilemodel.findOne({ UserID: message.author.id });
+  profileData = await profilemodel.findOne({ UserID: message.author.id });
     if (!profileData) {
       let profile = await profilemodel.create({
         UserID: message.author.id,
@@ -17,8 +17,6 @@ module.exports = async(Discord, client, message) =>{
         
       });
       profile.save();
-    }}catch(err){
-        console.log(err)
     }
     if(command){
        command.execute(client, message, args, cmd, Discord);
