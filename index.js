@@ -22,7 +22,7 @@ client.discordTogether = new DiscordTogether(client);
 mongoose.connect(process.env.mongo_srv, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false
+        //useFindAndModify: false
     }).then(()=>{
         console.log('connected to the data base')
     }).catch((err)=>{
