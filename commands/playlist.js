@@ -8,7 +8,6 @@ module.exports = {
     async execute(client, message, args, cmd, Discord, profileData) {
       let song={};
         if (cmd === 'pladd'){
-            message.channel.send('hi');
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
                 song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
@@ -40,7 +39,6 @@ module.exports = {
 
 
             if (cmd === 'plrm'){
-                message.channel.send('hi');
                 if (ytdl.validateURL(args[0])) {
                     const song_info = await ytdl.getInfo(args[0]);
                     song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
