@@ -36,7 +36,7 @@ module.exports = {
                 //If there was no link, use keywords to search for a video. Set the song object to have two keys. Title and URl.
                 const video_finder = async (query) =>{
                     const video_result = await ytSearch(query);
-                    return video_result.videos[0];
+                    return video_result.all[0];
                 }
 
                 const video = await video_finder(args.join(' '));
