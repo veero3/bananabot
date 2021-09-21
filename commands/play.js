@@ -73,7 +73,6 @@ module.exports = {
                 } catch (err) {
                     queue.delete(message.guild.id);
                     message.channel.send('There was an error connecting!');
-                    throw err;
                 }
             } else{
                 server_queue.songs.push(song);
