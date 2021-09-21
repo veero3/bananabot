@@ -97,9 +97,9 @@ module.exports = {
            // if (!args.length) return message.channel.send('You need to send the second argument!');
             let song = {};
             let i =0
-            // if(!profileData.songurl[0]){
-            //     return message.channel.send('No songs in Yuor Playlist')
-            // }
+            if(!profileData.songname[0]){
+                return message.channel.send('No songs in Yuor Playlist')
+            }
             message.channel.send('sure! (this might take a minute!!)')
             for(i in profileData.songname){
                 sn=profileData.songname[i]

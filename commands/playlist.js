@@ -70,6 +70,9 @@ module.exports = {
                     message.channel.send(`Removed ${song.title} from Your Playlist`)
                 }
             if (cmd === 'pl'){
+                if(!profileData.songname[0]){
+                    return message.channel.send('No songs in Your Playlist!, Use *bb pladd ____ to add songs*')
+                }
                 let i = 0
                 let k = 0
                 await profilemodel.findOne({UserID: message.author.id});
