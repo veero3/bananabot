@@ -133,23 +133,10 @@ module.exports = {
                
                else{
                 server_queue.songs.push(song);
-                let emb = new Discord.MessageEmbed()
-                .setColor('RANDOM')
-                .setAuthor('Added To Queue!!')
-                .setTitle(song.title)
-                .addFields(
-                    {name:`Channel`, value: `${voice_channel.name}`},
-                    {name:`Length`, value: `${songtime}`}
-                    )
-                .setThumbnail(song.thumb)
-                .setColor('RANDOM') 
-                .setTimestamp()
-                .setFooter(message.guild.name);   
 
-                 message.channel.send(emb).then(message.react('👌'));
                 }
             
-        }}
+        }message.channel.send('Your Playlist added to Queue')}
         
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
