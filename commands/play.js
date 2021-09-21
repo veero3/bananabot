@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
+const { profile } = require('console');
 var songtime=0;
 
 //Global queue for your bot. Every server will have a key and value pair in this map. { guild.id, queue_constructor{} }
@@ -8,8 +9,8 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume', 'seek'],
-    async execute(client, message, args, cmd, Discord){
+    aliases: ['skip', 'stop', 'p', 'leave', 'queue', 'q', 'l', 's', 'pause', 'resume', 'seek', 'plp'],
+    async execute(client, message, args, cmd, Discord, profileData){
 
 
         //Checking for the voicechannel and permissions
@@ -20,7 +21,7 @@ module.exports = {
         if (!permissions.has('SPEAK')) return message.channel.send('You dont have the correct permissins');
 
         //server queue, getting this server queue from the global queue.
-        const server_queue = queue.get(message.guild.id);
+        let server_queue = queue.get(message.guild.id);
 
         if (cmd === 'play' || cmd === 'p'){
             if (!args.length) return message.channel.send('You need to send the second argument!');
@@ -52,13 +53,13 @@ module.exports = {
             //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue|| !message.guild.voice.channel){
 
-                const queue_constructor = {
+                    const queue_constructor = {
                     voice_channel: voice_channel,
                     text_channel: message.channel,
                     connection: null,
                     songs: []
-                }
-                
+                    }
+
                 //Add our key and value pair into the global queue. We then use this to get our server queue.
                 queue.set(message.guild.id, queue_constructor);
                 queue_constructor.songs.push(song);
@@ -92,6 +93,63 @@ module.exports = {
                 return message.channel.send(emb).then(message.react('👌'));
             }
         }
+        else if (cmd === 'plp'){
+           // if (!args.length) return message.channel.send('You need to send the second argument!');
+            let song = {};
+            let i =0
+            for(i in profileData.songurl){
+            //If the first argument is a link. Set the song object to have two keys. Title and URl
+                const song_info = await ytdl.getInfo(profileData.songurl[i]);
+                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
+                songtime = song.time+` Seconds`;
+                server_queue=queue.get(message.guild.id)
+            //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
+            if (!server_queue|| !message.guild.voice.channel){
+                
+                const queue_constructor = {
+                    voice_channel: voice_channel,
+                    text_channel: message.channel,
+                    connection: null,
+                    songs: []
+                }
+                
+                //Add our key and value pair into the global queue. We then use this to get our server queue.
+                queue.set(message.guild.id, queue_constructor);
+                queue_constructor.songs.push(song);
+    
+                //Establish a connection and play the song with the vide_player function.
+                try {
+                    const connection = await voice_channel.join();
+                    queue_constructor.connection = connection;
+                    video_player(message.guild, queue_constructor.songs[0]);
+                    connection.voice.setSelfDeaf(true);
+                } catch (err) {
+                    queue.delete(message.guild.id);
+                    message.channel.send('There was an error connecting!');
+                    throw err;
+                }console.log(server_queue)
+               // continue;
+            }
+               
+               else{
+                server_queue.songs.push(song);
+                let emb = new Discord.MessageEmbed()
+                .setColor('RANDOM')
+                .setAuthor('Added To Queue!!')
+                .setTitle(song.title)
+                .addFields(
+                    {name:`Channel`, value: `${voice_channel.name}`},
+                    {name:`Length`, value: `${songtime}`}
+                    )
+                .setThumbnail(song.thumb)
+                .setColor('RANDOM') 
+                .setTimestamp()
+                .setFooter(message.guild.name);   
+
+                 message.channel.send(emb).then(message.react('👌'));
+                }
+            
+        }}
         
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
