@@ -123,12 +123,12 @@ module.exports = {
                     queue_constructor.connection = connection;
                     video_player(message.guild, queue_constructor.songs[0]);
                     connection.voice.setSelfDeaf(true);
-                } catch (err) {
+                } catch (err){
                     queue.delete(message.guild.id);
                     message.channel.send('There was an error connecting!');
-                    throw err;
-                }console.log(server_queue)
-               // continue;
+                    
+                }
+               
             }
                
                else{
