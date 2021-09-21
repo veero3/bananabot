@@ -97,6 +97,9 @@ module.exports = {
            // if (!args.length) return message.channel.send('You need to send the second argument!');
             let song = {};
             let i =0
+            if(!profileData.songurl){
+                return message.channel.send('No songs in Yuor Playlist')
+            }
             for(i in profileData.songurl){
             //If the first argument is a link. Set the song object to have two keys. Title and URl
                 const song_info = await ytdl.getInfo(profileData.songurl[i]);
