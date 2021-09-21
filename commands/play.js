@@ -254,7 +254,7 @@ const que = (message, server_queue, song) => {
         for(song of server_queue.songs){ 
             if(i == 1);
             else{                         
-            emb.addField(song.title, song.time)
+            emb.addField(song.title, songtime)
             }
             i++;
         } 
