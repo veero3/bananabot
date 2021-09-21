@@ -100,6 +100,7 @@ module.exports = {
             if(!profileData.songurl){
                 return message.channel.send('No songs in Yuor Playlist')
             }
+            message.channel.send('sure! (this might take a minute!!)')
             for(i in profileData.songurl){
             //If the first argument is a link. Set the song object to have two keys. Title and URl
                 const song_info = await ytdl.getInfo(profileData.songurl[i]);
@@ -139,7 +140,7 @@ module.exports = {
 
                 }
             
-        }message.channel.send('Your Playlist added to Queue')}
+        }message.channel.send('Your Playlist added to Queue!').react(messgae.react('👍'))}
         
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
