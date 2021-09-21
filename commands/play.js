@@ -1,4 +1,5 @@
-//const profilemodel = require('../models/profileSchema');
+
+const profilemodel = require('../models/profieschema');
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
@@ -93,12 +94,13 @@ module.exports = {
             }
         }
         else if (cmd === 'plp'){
+            await profilemodel.findOne({UserID: message.user.id})
            // if (!args.length) return message.channel.send('You need to send the second argument!');
             let song = {};
             let i =0
-            if(!profileData.songurl[0]){
-                return message.channel.send('No songs in Yuor Playlist')
-            }
+            // if(!profileData.songurl[0]){
+            //     return message.channel.send('No songs in Yuor Playlist')
+            // }
             message.channel.send('sure! (this might take a minute!!)')
             for(i in profileData.songurl){
             //If the first argument is a link. Set the song object to have two keys. Title and URl
