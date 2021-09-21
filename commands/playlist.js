@@ -33,7 +33,8 @@ module.exports = {
             }, {
                 $push:{
                 songname: song.title,
-                songurl: song.url},});
+                //songurl: song.url
+            },});
                 message.channel.send(`Added ${song.title} to Your Playlist`)
             }
 
@@ -64,13 +65,11 @@ module.exports = {
                 }, {
                     $pull:{
                     songname: song.title,
-                    songurl: song.url},});
+                    //songurl: song.url
+                },});
                     message.channel.send(`Removed ${song.title} from Your Playlist`)
                 }
             if (cmd === 'pl'){
-                if(!profileData.songname){
-                    return message.channel.send('No songs in Your Playlist')
-                }
                 let i = 0
                 let k = 0
                 await profilemodel.findOne({UserID: message.author.id});

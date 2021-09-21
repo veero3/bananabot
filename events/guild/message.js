@@ -13,8 +13,7 @@ module.exports = async(Discord, client, message) =>{
       let profile = await profilemodel.create({
         UserID: message.author.id,
         username: message.author.username,
-        songname: [],
-        songurl:[]
+        songname: []
       });
       profile.save();
     }

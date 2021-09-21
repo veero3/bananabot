@@ -94,7 +94,6 @@ module.exports = {
             }
         }
         else if (cmd === 'plp'){
-            await profilemodel.findOne({UserID: message.user.id})
            // if (!args.length) return message.channel.send('You need to send the second argument!');
             let song = {};
             let i =0
@@ -102,11 +101,21 @@ module.exports = {
             //     return message.channel.send('No songs in Yuor Playlist')
             // }
             message.channel.send('sure! (this might take a minute!!)')
-            for(i in profileData.songurl){
+            for(i in profileData.songname){
+                sn=profileData.songname[i]
             //If the first argument is a link. Set the song object to have two keys. Title and URl
-                const song_info = await ytdl.getInfo(profileData.songurl[i]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
-                songtime = song.time+` Seconds`;
+            const video_finder = async (query) =>{
+                const video_result = await ytSearch(profileData.songname[i]);
+                return video_result.all[0];
+            }
+
+            const video = await video_finder(args.join(' '));
+            if (video){
+                song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
+                songtime=song.time; 
+            } else {
+                return message.channel.send('Error finding video.');
+            }
                 server_queue=queue.get(message.guild.id)
             //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue|| !message.guild.voice.channel){
@@ -141,7 +150,7 @@ module.exports = {
 
                 }
             
-        }message.channel.send('Your Playlist added to Queue!').react(messgae.react('👍'))}
+        }message.channel.send('Your Playlist added to Queue!').then(message.react('👍'))}
         
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
