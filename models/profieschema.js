@@ -3,7 +3,7 @@ profileschema = new mongoose.Schema({
     UserID: {type: String, require: true, unique: true},
     username: {type: String, require: true},
     songname: {type: Array},
-    songurl: {type: Array, unique: false}
+    songurl: {type: Array}
 })
 const model = mongoose.model('playlist', profileschema)
 
