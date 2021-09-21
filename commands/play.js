@@ -1,4 +1,4 @@
-const profilemodel = require("../models/profileSchema");
+//const profilemodel = require('../models/profileSchema');
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
