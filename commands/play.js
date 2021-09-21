@@ -1,9 +1,8 @@
+const profilemodel = require("../models/profileSchema");
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const Discord = require('discord.js');
-const { profile } = require('console');
 var songtime=0;
-
 //Global queue for your bot. Every server will have a key and value pair in this map. { guild.id, queue_constructor{} }
 const queue = new Map();
 
@@ -22,6 +21,7 @@ module.exports = {
 
         //server queue, getting this server queue from the global queue.
         let server_queue = queue.get(message.guild.id);
+       
 
         if (cmd === 'play' || cmd === 'p'){
             if (!args.length) return message.channel.send('You need to send the second argument!');

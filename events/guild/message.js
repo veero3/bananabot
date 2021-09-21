@@ -14,7 +14,7 @@ module.exports = async(Discord, client, message) =>{
         UserID: message.author.id,
         username: message.author.username,
         songname: [],
-        //songurl:[]
+        songurl:[]
       });
       profile.save();
     }
