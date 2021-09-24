@@ -60,6 +60,12 @@ module.exports = {
                         return message.channel.send('Error finding video.');
                     }
                 }
+                let m =0;
+                for(i in profileData.songname){
+                    if(song.title === profileData.songname[i])
+                        m+=1;}
+                        if(m==0)
+                        return message.channel.send('No such Song in Playlist');
                 await profilemodel.findOneAndUpdate({
                     UserID: message.author.id,
                 }, {
@@ -70,9 +76,15 @@ module.exports = {
                     message.channel.send(`Removed ${song.title} from Your Playlist`)
                 }
             if (cmd === 'pl'){
-                if(!profileData.songname[0]){
-                    return message.channel.send('No songs in Your Playlist!, Use *bb pladd ____ to add songs*')
-                }
+            //     let targ=message.mentions.users.first();
+            
+            //  if(targ)
+            //     targ=message.guild.members.cache.get(targ.id);
+            
+            // else if(!targ)
+            //     targ=message.guild.members.cache.find(member => member.id === args[0]);
+            // else if(!args[0])
+            //     targ=message.author.id
                 let i = 0
                 let k = 0
                 await profilemodel.findOne({UserID: message.author.id});
