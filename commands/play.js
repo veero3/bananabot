@@ -83,7 +83,7 @@ module.exports = {
                 .setTitle(song.title)
                 .addFields(
                     {name:`Channel`, value: `${voice_channel.name}`},
-                    {name:`Length`, value: `${songtime}`}
+                    {name:`Length`, value: (song.time&&song.time!=0)?`${songtime}`:`live`}
                     )
                 .setThumbnail(song.thumb)
                 .setColor('RANDOM') 
