@@ -39,6 +39,9 @@ module.exports = {
             }
             else message.channel.send('No such user found');
         }
+        else{
+            message.channel.send('You do not have permissions')
+        }
     }
     else if(cmd === 'unmute'){
         const target = message.mentions.users.first();
@@ -58,6 +61,8 @@ module.exports = {
             message.channel.send(`<@${targ.user.id}> has been unmuted`);
         }
         else message.channel.send('No such user found');
+    }else{
+        message.channel.send('You do not have permissions')
     }
     }
     }
