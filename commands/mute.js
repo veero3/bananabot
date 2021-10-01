@@ -9,7 +9,7 @@ module.exports = {
         if(!target && !args[0]){
             message.channel.send('Could not find user');
         }
-        else if(message.member.hasPermission('BAN_MEMBERS')||message.member.hasPermission('ADMINISTRATOR')){
+        else if(message.member.hasPermission('MANAGE_ROLES')||message.member.hasPermission('ADMINISTRATOR')){
             let muterole = message.guild.roles.cache.find(role => role.name === 'muted')||message.guild.roles.cache.find(role => role.name === 'Muted');
             if(target){ 
                 let targ = message.guild.members.cache.get(target.id);
@@ -43,7 +43,7 @@ module.exports = {
     else if(cmd === 'unmute'){
         const target = message.mentions.users.first();
         if(!target && !args[0])message.channel.send('Could not find user');
-        else if(message.member.hasPermission('BAN_MEMBERS')||message.member.hasPermission('ADMINISTRATOR')){
+        else if(message.member.hasPermission('MANAGE_ROLES')||message.member.hasPermission('ADMINISTRATOR')){
         let muterole = message.guild.roles.cache.find(role => role.name === 'muted')||message.guild.roles.cache.find(role => role.name === 'Muted');
         if(target){ 
             let targ = message.guild.members.cache.get(target.id);
