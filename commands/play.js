@@ -254,7 +254,7 @@ const que = (message, server_queue, song) => {
         const embe = new Discord.MessageEmbed()
         .setColor('RANDOM')
         .setTitle('Now Playing!')
-        .addField(server_queue.songs[0].title, server_queue.songs[0].time)
+        .addField(server_queue.songs[0].title, songtime /*server_queue.songs[0].time*/)
         message.channel.send(embe);
         let i = 1;
         const emb = new Discord.MessageEmbed()
