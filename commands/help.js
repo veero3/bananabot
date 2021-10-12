@@ -13,7 +13,7 @@ module.exports ={
         .addFields(
             {name:`**Moderation**`, value:`\`mute, unmute, kick, ban, unban\``},
             {name: `**Role Ulitiies**`, value:`\`role, roleadd, rolerem\``},
-            {name: `**Music**`, value:`\`play, stop, skip, queue, leave, pause, resume, seek\``},
+            {name: `**Music**`, value:`\`play, stop, skip, queue, leave, pause, seek\``},
             {name: `**Playlist**`, value:`\`pl, pladd, plrm, plp\``},
             {name: `**Discord Together**`, value:`\`yt, chess, poker, fishing, betrayal\``},
             {name: `**Info**`, value:`\`userinfo, serverinfo\``},
