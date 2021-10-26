@@ -31,7 +31,7 @@ module.exports = {
             //If the first argument is a link. Set the song object to have two keys. Title and URl.
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.islive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
+                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url, is_live: song_info.videoDetails.isLive, thumb: song_info.videoDetails.thumbnails[0].url, time: song_info.videoDetails.lengthSeconds}
                 songtime = song.time+` Seconds`;
             } 
             else {
@@ -43,7 +43,12 @@ module.exports = {
 
                 const video = await video_finder(args.join(' '));
                 if (video){
-                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
+                 var type
+                    if(video.type == 'live')
+                    type = true
+                    else 
+                    type = false
+                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: type}
                     songtime=song.time; 
                 } else {
                     return message.channel.send('Error finding video.');
@@ -111,11 +116,16 @@ module.exports = {
 
             const video = await video_finder(args.join(' '));
             if (video){
-                song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: video.islive}
-                songtime=song.time; 
-            } else {
-                return message.channel.send('Error finding video.');
-            }
+                var type
+                   if(video.type == 'live')
+                   type = true
+                   else 
+                   type = false
+                   song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: type}
+                   songtime=song.time; 
+               } else {
+                   return message.channel.send('Error finding video.');
+               }
                 server_queue=queue.get(message.guild.id)
             //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue|| !message.guild.voice.channel){
@@ -184,13 +194,22 @@ const video_player = async (guild, song, message) => {
         return;
     }
 
-      
-     const stream = ytdl(song.url, {liveBuffer: 500, filter: 'audioonly'});
+      if(song.is_live){
+     const stream = ytdl(song.url, {liveBuffer: 500});
          song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
          .on('finish', () => {
              song_queue.songs.shift();
              video_player(guild, song_queue.songs[0]);
          });
+        }
+         else{
+            const stream = ytdl(song.url, {filter:'audioonly'});
+            song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
+            .on('finish', () => {
+                song_queue.songs.shift();
+                video_player(guild, song_queue.songs[0]);
+            });
+        }         
         
         const embedd = new Discord.MessageEmbed()
         .setAuthor(`🎶 Now playing`)
