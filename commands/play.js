@@ -185,7 +185,7 @@ const video_player = async (guild, song, message) => {
     }
 
       
-     const stream = ytdl(song.url, {liveBuffer: 300});
+     const stream = ytdl(song.url, {liveBuffer: 300, filter: 'audioonly'});
          song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
          .on('finish', () => {
              song_queue.songs.shift();
