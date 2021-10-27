@@ -44,11 +44,11 @@ module.exports = {
                 const video = await video_finder(args.join(' '));
                 if (video){
                  var type
-                    if(video.type == 'live')
+                    if(video.type === 'live')
                     type = true
                     else 
                     type = false
-                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: type}
+                    song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live:type}
                     songtime=song.time; 
                 } else {
                     return message.channel.send('Error finding video.');
@@ -117,11 +117,11 @@ module.exports = {
             const video = await video_finder(args.join(' '));
             if (video){
                 var type
-                   if(video.type == 'live')
+                   if(video.type === 'live')
                    type = true
                    else 
                    type = false
-                   song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: type}
+                   song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live:type}
                    songtime=song.time; 
                } else {
                    return message.channel.send('Error finding video.');
@@ -165,7 +165,7 @@ module.exports = {
         else if(cmd === 'skip'|| cmd === 's') skip_song(message, server_queue);
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
         else if(cmd === `pause`)pause(message, server_queue);
-        //else if(cmd === 'resume')resume(message, server_queue);
+      //else if(cmd === 'resume')resume(message, server_queue);
         else if(cmd ==='queue' || cmd ==='q') que(message, server_queue);
         else if(cmd ==='seek'){
                 const queue_constructor = {
@@ -201,6 +201,7 @@ const video_player = async (guild, song, message) => {
              song_queue.songs.shift();
              video_player(guild, song_queue.songs[0]);
          });
+         console.log('live')
         }
          else{
             const stream = ytdl(song.url, {filter:'audioonly'});
@@ -209,6 +210,7 @@ const video_player = async (guild, song, message) => {
                 song_queue.songs.shift();
                 video_player(guild, song_queue.songs[0]);
             });
+            console.log('not live');
         }         
         
         const embedd = new Discord.MessageEmbed()
