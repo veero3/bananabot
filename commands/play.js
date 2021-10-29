@@ -166,7 +166,7 @@ module.exports = {
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
         else if(cmd === `pause`)pause(message, server_queue);
       //else if(cmd === 'resume')resume(message, server_queue);
-        else if(cmd ==='queue' || cmd ==='q') que(message, server_queue);
+        else if(cmd ==='queue' || cmd ==='q') que(message, server_queue, song);
         else if(cmd ==='seek'){
                 const queue_constructor = {
                     voice_channel: voice_channel,
