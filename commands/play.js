@@ -88,7 +88,7 @@ module.exports = {
                 .setTitle(song.title)
                 .addFields(
                     {name:`Channel`, value: `${voice_channel.name}`},
-                    {name:`Length`, value: (song.time&&song.time!=0)?`${songtime}`:`live`}
+                    {name:`Length`, value: (!song.is_live)?`${songtime}`:`live`}
                     )
                 .setThumbnail(song.thumb)
                 .setColor('RANDOM') 
@@ -219,7 +219,7 @@ const video_player = async (guild, song, message) => {
         .setURL(song.url)
         .addFields(
             {name:`Channel`, value: `<#${guild.voice.channelID}>`},
-            {name:`Length`, value: (song.time&&song.time!=0)?`${songtime}`:`live`}
+            {name:`Length`, value: (!song.is_live)?`${songtime}`:`live`}
             )
         .setThumbnail(song.thumb)
         .setColor('RANDOM') 
