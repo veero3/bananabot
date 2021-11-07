@@ -117,11 +117,11 @@ module.exports = {
             const video = await video_finder(args.join(' '));
             if (video){
                 var type
-                   if(video.type === 'live')
+                   if(video.type == 'live')
                    type = true
                    else 
                    type = false
-                   song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live:type}
+                   song = { title: video.title, url: video.url, time:video.duration, thumb:video.thumbnail, is_live: type}
                    songtime=song.time; 
                } else {
                    return message.channel.send('Error finding video.');
@@ -166,7 +166,7 @@ module.exports = {
         else if(cmd === 'stop' || cmd ==='leave'|| cmd === 'l') stop_song(message, server_queue);
         else if(cmd === `pause`)pause(message, server_queue);
       //else if(cmd === 'resume')resume(message, server_queue);
-        else if(cmd ==='queue' || cmd ==='q') que(message, server_queue, song);
+        else if(cmd ==='queue' || cmd ==='q') que(message, server_queue);
         else if(cmd ==='seek'){
                 const queue_constructor = {
                     voice_channel: voice_channel,
