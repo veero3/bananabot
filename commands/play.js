@@ -114,9 +114,7 @@ module.exports = {
             const connection = await voice_channel.join();
             console.log(client.voice.connections.size)
             for (i in profileData.songname) {
-                if (client.voice.connections.size == 0) {
-                    return
-                }
+                
                 sn = profileData.songname[i]
                 //If the first argument is a link. Set the song object to have two keys. Title and URl
                 const video_finder = async (query) => {
@@ -155,14 +153,16 @@ module.exports = {
                     try {
 
                         queue_constructor.connection = connection;
-                        video_player(message.guild, queue_constructor.songs[0]);
+                        video_player(client, message.guild, queue_constructor.songs[0]);
                         connection.voice.setSelfDeaf(true);
                     } catch (err) {
                         queue.delete(message.guild.id);
                         message.channel.send('There was an error connecting!');
 
                     }
-
+                    if (client.voice.connections.size == 0) {
+                        return
+                    }
                 }
 
                 else {
@@ -197,7 +197,7 @@ module.exports = {
 
 }
 
-const video_player = async (guild, song, message) => {
+const video_player = async (client, guild, song) => {
     const song_queue = queue.get(guild.id);
 
 
@@ -226,7 +226,9 @@ const video_player = async (guild, song, message) => {
             });
         console.log('not live');
     }
-
+    if (client.voice.connections.size == 0) {
+        return
+    }
     const embedd = new Discord.MessageEmbed()
         .setAuthor(`🎶 Now playing`)
         .setTitle(song.title)
