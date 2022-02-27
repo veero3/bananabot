@@ -1,7 +1,7 @@
 const profilemodel = require('../../models/profieschema');
 const profilemod = require('../../models/muterole')
 module.exports = async(Discord, client, message) =>{
-    const prefix = 'b ';
+    const prefix = 'bb ';
     if(!message.content.startsWith(prefix)||message.author.bot)return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
