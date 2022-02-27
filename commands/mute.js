@@ -73,12 +73,12 @@ module.exports = {
             }
         }
         else if (cmd === 'setmute') {
-            console.log(profilData)
             await profilemod.findOneAndUpdate({
                 serverID: message.guild.id
             }, {
                 mute: message.mentions.roles.first().id
             });
+            message.channel.send(`Mute role set to ${message.mentions.roles.first()}`)
         }
     }
 
