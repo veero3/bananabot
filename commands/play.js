@@ -75,7 +75,7 @@ module.exports = {
                 try {
                     const connection = await voice_channel.join();
                     queue_constructor.connection = connection;
-                    video_player(message.guild, queue_constructor.songs[0]);
+                    video_player(client, message.guild, queue_constructor.songs[0]);
                     connection.voice.setSelfDeaf(true);
                 } catch (err) {
                     queue.delete(message.guild.id);
