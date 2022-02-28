@@ -139,7 +139,7 @@ module.exports = {
           x = i;
         } else if (args[0] == "shuffle") {
           x = Math.floor(Math.random() * profileData.songname.length + 1);
-          for (x in temp) {
+          while (x in temp) {
             x = Math.floor(Math.random() * profileData.songname.length + 1);
           }
           temp[y] = x;
