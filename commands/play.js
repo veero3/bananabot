@@ -133,23 +133,48 @@ module.exports = {
       const connection = await voice_channel.join();
       x = 0;
       y = 0;
+      z = 0;
       temp = [];
       for (i in profileData.songname) {
         if (!args[0]) {
           x = i;
         } else if (args[0] == "shuffle") {
-          x = Math.floor(Math.random() * profileData.songname.length + 1);
-          while (x in temp) {
-            x = Math.floor(Math.random() * profileData.songname.length + 1);
+          while (true) {
+            x = Math.floor(Math.random() * profileData.songname.length);
+            while (y <= temp.length) {
+              if (x == temp[y]) {
+                z = z + 1;
+                break;
+              }
+              y = y + 1;
+            }
+            if (z >= 1) {
+              x = Math.floor(Math.random() * profileData.songname.length);
+              y = 0;
+              z = 0;
+              continue;
+            }
+            temp[i] = x;
+            y = 0;
+            break;
           }
-          temp[y] = x;
-          y = y + 1;
         }
-        console.log(profileData.songname[x]);
-        console.log(y);
-        console.log(x);
-        console.log(temp);
-        console.log(args[0]);
+        // // while (y <= temp.length) {
+        // //   x = Math.floor(Math.random() * profileData.songname.length);
+        // //   if (x == temp[y]) {
+        // //     y = y + 1;
+        // //     continue;
+        // //   } else {
+        // //     temp[z] = x;
+        // //     y = 0;
+        // //     z = z + 1;
+        // //     break;
+        // //   }
+        // //}
+        // // temp[y] = x;
+        // // y = y + 1;
+        // // break;
+
         //If the first argument is a link. Set the song object to have two keys. Title and URl
         const video_finder = async (query) => {
           const video_result = await ytSearch(profileData.songname[x]);
